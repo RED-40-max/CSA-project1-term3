@@ -8,7 +8,7 @@
 import java.util.Scanner; 
 
 
-public class mainLite {
+public class main {
     private static Scanner reader = new Scanner(System.in); //makes a scanner for every bit
 
     public static void main(String[] args) {
