@@ -128,7 +128,7 @@ public class studentToCourse
         int UsrCourse_Choice = reader.nextInt(); //reads in the Choice
         String CourseName = "ratsoup"; //intilized with skibidi name for error checking
         String APStatus = "maybe"; //initlized with radical error checking wrong value
-        switch(UsrCourse_Choice) //based on integer input, dose course selection
+        switch(UsrCourse_Choice) //based on integer input, dose course selection accordingly / adds course and appropriate status 
         {
             case 1: 
                 CourseName = "World History";
@@ -211,15 +211,32 @@ public class studentToCourse
         writer.println(CourseName + " Present: " );
         writer.println(CourseName + " Tardy: " );
         writer.println(CourseName + " Absent: " );
-
-
+        writer.println(" "); //blank for formatting
         
-        writer.close(); //close the writer out. 
-        FileScan.close(); //closes filescan too 
-         
-        //- mehtod that prints only one student
-        //PrintStudents()
-        
+        //showing that it worked
+        System.out.println("you have now added" + StudentNamefromFile + "to" + CourseName); 
+        //reads file if you want
+        System.out.println("Would you like to see the updated File?(type 'yes' or enter anything else for no)"); 
+        String UserResponseUF = reader.nextLine(); //finds users response
+        if (UserResponseUF == "yes")
+        {
+            while(FileScan.hasNext())
+            {
+                System.out.println(FileScan.nextLine()); //reads the entire student file
+            }
+            //PrintStudents()
+    
+            writer.close(); //close the writer out. 
+            FileScan.close(); //closes filescan too 
+
+        } 
+        //for the loop 
+        System.out.println("Would you like to add another student to another course? (type 'yes' or enter anything else for no)"); 
+        String UserResponseLpr = reader.nextLine(); //finds users response
+        if (UserResponseLpr == "yes")
+        {
+            AddStudentToCourse(); //gose back to the class and calls it 
+        }
 
     }
 
