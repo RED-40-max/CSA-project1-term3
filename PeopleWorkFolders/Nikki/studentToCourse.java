@@ -190,27 +190,28 @@ public class studentToCourse
         //makes a writer that can append to the end charecters and then turns it over to the printer writer so it can write strings
         writer.println(" "); //blank for formatting
         writer.println("Course Name:" + CourseName); //set up course name
-        writer.println("Course Type:" + APStatus ); //setting AP status
+        writer.println(CourseName + " Type: " + APStatus ); //setting AP status
+        int defaltValue = 999; //this is to initalize an impossiable number so it can be checked and marked as blank - makes it easier on grade() function
         //setting up with course name for easy refrence 
-        writer.println(CourseName + " Overall Grade: " );
-        writer.println(CourseName + " Quiz Percentage Score: " );
+        writer.println(CourseName + " Overall Grade: " + " " + defaltValue);
+        writer.println(CourseName + " Quiz Percentage Score: " + " " + defaltValue );
         
         //loop for quiz writing
         for(int x = 0; x<5; x++)
         {
-            writer.println(CourseName + " Quiz "+ x +"Score: " );
+            writer.println(CourseName + " Quiz "+ x +"Score: " + " " + defaltValue);
         }
         //other stuff
-        writer.println(CourseName + " Midterm Percentage Score: " );
-        writer.println(CourseName + " Midterm Score: " );
+        writer.println(CourseName + " Midterm Percentage Score: " + " " + defaltValue);
+        writer.println(CourseName + " Midterm Score: " + " ");
 
-        writer.println(CourseName + " Final Percentage Score: " );
-        writer.println(CourseName + " Final Score: " );
+        writer.println(CourseName + " Final Percentage Score: " + " " + defaltValue);
+        writer.println(CourseName + " Final Score: " + " ");
 
         writer.println(CourseName + " Attendence " );
-        writer.println(CourseName + " Present: " );
-        writer.println(CourseName + " Tardy: " );
-        writer.println(CourseName + " Absent: " );
+        writer.println(CourseName + " Present: " + " " + defaltValue);
+        writer.println(CourseName + " Tardy: " + " " + defaltValue);
+        writer.println(CourseName + " Absent: " + " " + defaltValue);
         writer.println(" "); //blank for formatting
         
         //showing that it worked
@@ -240,15 +241,178 @@ public class studentToCourse
 
     }
 
+    //making it calculate grades 
 
-    public static void CalculateGrade()
+    public static void CalculateGrade(int ID_Choice) throws IOException
     {
+        String[] Courses = {"World History", "Geometry", "AP Chemistry", "AP Literature" }; //makes a list of courses to iterate thorught
+        //StudentStats() 
+        //make file scanner to read the file
+        Scanner FileScan = new Scanner(new File(ID_Choice + ".txt")); 
+
+        //find all course names and store in a string 
+        //find index of first course, do calculations, take away that index and loop for all other instances 
+
+        String CompLine; //comparing line 
+        //find all the classes student is in 
         
+        String CurrentCourse; //makes a string to store it 
+
+       
+     
+        for(int x = 0; x < Courses.length; x++)
+        {
+            //in this loop to reset for each course
+            int RunningQuizScore = 0; //points earned - 
+            int RunningQuizDenom = 0; //demonanators / what the points max was 
+
+            int MidtermScore = 0; //for the midterm
+            int FinalScore = 0; //for the final
+            double QuizWeights = 0; 
+            double SummitiveWeight = 0; 
+            double HomeworkWeight = 0; 
+            String LetterGrade = "P"; 
+            
+
+            while(FileScan.hasNext()) //reads entire file
+            { 
+            
+                CompLine = FileScan.next(); //reads one line at a atime 
+                if(CompLine.indexOf(Courses[x]) != -1) //if the course name exists 
+                {
+                //sets weights for the classes when conforiming 
+                    if(CompLine.indexOf(Courses[x] + " Type: AP") != -1)  // if it is a AP type course sets up for AP weightage 
+                    {   
+                         QuizWeights = 0.10; //sets up for AP tests
+                         SummitiveWeight = 0.8; 
+                         HomeworkWeight = 0.1; 
+                    }
+                    else if(CompLine.indexOf(Courses[x] + " Type: Regular") != -1)  // if it is a AP type course sets up for AP weightage 
+                    {   
+                         QuizWeights = 0.20; //sets up for AP tests
+                         SummitiveWeight = 0.8; 
+                         HomeworkWeight = 0.0; 
+                    }
+                //selects the category and reads it in as numbers 
+                
+                
+                    for(int m = 0; x < 5; m++) //loop for quizzes
+                    {
+                        String ComaprisonQuiz = (Courses[x] + " Quiz "+ m + "Score: " );  
+                        //finds the string containg quiz score to total it up
+                        if (CompLine.indexOf(ComaprisonQuiz)!= -1)
+                        {
+                            int HolderValueQuiz = FileScan.nextInt();
+                            if( HolderValueQuiz != 999) //if next int contains anything but 
+                            {   
+                                RunningQuizScore += HolderValueQuiz; //adds the points to the running score of it 
+                                RunningQuizDenom += 20; //adds 20 since each quiz is worth 20 points 
+                            }
+
+                        }
+                    
+                    }
+        
+                
+                String ComaprisonMidterm = (Courses[x] + " Midterm Percentage Score: " ); //sets up a string to compare to 
+                if (CompLine.indexOf( ComaprisonMidterm) != -1) //checks if there is a midterm line for this course
+                {
+                    int HolderValueMidterm = FileScan.nextInt();
+                    if( HolderValueMidterm != 999) //if next int contains anything but 
+                    { 
+                        MidtermScore = HolderValueMidterm;
+
+                    }   
+                
+                    //if ap / not ap - calculates final grades based on weights and totals 
+
+
+                }
+                String ComparisionFinal = (Courses[x] + " Final Score: " ); //checks if there is a midterm line for this course
+                if(CompLine.indexOf(ComparisionFinal) != -1)
+                {
+                    int HolderValueFinal = FileScan.nextInt();
+                    if(HolderValueFinal != 999)
+                    {
+                        FinalScore = HolderValueFinal; //sets it up
+
+                    }
+
+                }
+            
+                
+        }       
+
+    
+        }
+        // at the end of the for loop then we take all the scores and calculate it 
+            double QuizPercentScore = (double)RunningQuizScore/(double)RunningQuizDenom; //calculates quiz percentage
+            double MidtermPercentScore = (double)MidtermScore/50.0; //finds midterm score 
+            double FinalPercentScore = (double)FinalScore / 100.0; //finds final score 
+
+            double CoursePercentageScore = (QuizPercentScore * QuizWeights) + (((MidtermPercentScore + FinalPercentScore)/2 ) *SummitiveWeight) + (HomeworkWeight * 1); 
+            //this assumes that we obtain the sumative score by midterm and final percent score by avrageing the midterm and final and multiplying it by the summitive weight 
+            //we are also assuming that homework has been completed and is weighted at 1 - so basically a free 10% to students in that class 
+            if((CoursePercentageScore > 0.93 )&&(CoursePercentageScore <1))
+            {
+                LetterGrade = "A"; 
+            } else if((CoursePercentageScore > 0.9 )&&(CoursePercentageScore < 0.93))
+            {
+                LetterGrade = "A-"; 
+
+            } else if((CoursePercentageScore > 0.87 )&&(CoursePercentageScore <0.9))
+            {
+                LetterGrade = "B+"; 
+                
+            } else if((CoursePercentageScore > 0.83 )&&(CoursePercentageScore < 0.87))
+            {
+                LetterGrade = "B"; 
+                
+            } else if((CoursePercentageScore > 0.8 )&&(CoursePercentageScore <0.83))
+            {
+                LetterGrade = "B-"; 
+                
+            } else if((CoursePercentageScore > 0.75 )&&(CoursePercentageScore <0.8))
+            {
+                LetterGrade = "C+"; 
+                
+            } else if((CoursePercentageScore > 0.70 )&&(CoursePercentageScore < 0.75))
+            {
+                LetterGrade = "C"; 
+                
+            } else if((CoursePercentageScore > 0.65 )&&(CoursePercentageScore < 0.70))
+            {
+                LetterGrade = "C-"; 
+                
+            } else if((CoursePercentageScore > 0.60 )&&(CoursePercentageScore < 0.65))
+            {
+                LetterGrade = "D+"; 
+            } else if((CoursePercentageScore > 0.55 )&&(CoursePercentageScore < 0.60))
+            {
+                LetterGrade = "D"; 
+                
+            } else if((CoursePercentageScore > 0.50 )&&(CoursePercentageScore < 0.55))
+            {
+                LetterGrade = "D-"; 
+                
+            } else if((CoursePercentageScore > 0 )&&(CoursePercentageScore < 0.50))
+            {
+                LetterGrade = "F"; 
+            }
+
+        //write the scores in by replaceing with specified course
+        PrintWriter writer = new PrintWriter(new FileWriter(ID_Choice +".txt", true));
+    //the writing back to the file agent / loop         
+    //QuizPercentScore
+    //MidtermPercentScore
+    //FinalPercentScore
+    //overall grade LetterGrade
+
+
+
+
+}
     }
-
-
-   
-
 
 }
 
