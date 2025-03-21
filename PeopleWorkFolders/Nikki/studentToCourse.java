@@ -25,22 +25,29 @@ public class studentToCourse
         int ID_Choice = reader.nextInt(); //reads in the ID chosen 
 
     //checking and handeling ID
+        boolean IsValidID = false; 
         //iterates thorught the array to check if user provided ID matches a valid ID within the Roster
         for(int x: StudentRosterID)
         {
             //if so, then turn the valid ID to true
             if(x == ID_Choice)
             {
-                System.out.println("Error - you have entered a ID that dose not exist");
-                //adds error
-                AddStudentToCourse();
-                //starts from the beginning
+                IsValidID = true; //changes to true so error handling isn't triggered
             }
             //otherwise leave it as it's defalt-- false 
-        }  
+        }  //aftwerward the loop you must have checked every value and if it still is false  - then 
+        if (IsValidID == false)
+        {
+            System.out.println("Error - you have entered a ID that dose not exist");
+                //adds error
+                AddStudentToCourse();
+                return; //to exit properly and avoid further calling
+        }
 
         Scanner FileScan; //sets up file scanner
         FileScan = new Scanner(new File(ID_Choice + ".txt")); //uses given id for file
+        
+        
 
         //conferms that this is the student's file user wants to select
             //first find the student name thorught a loop, finding name: and making substrig to later print 
@@ -53,7 +60,7 @@ public class studentToCourse
                 ComparisionStringN = FileScan.next(); //reads one line at a atime 
                 if (ComparisionStringN.indexOf("First Name:") != -1) //checks if the line contains 'unique id' - meaning it can have the unique ID of the thing
                 {
-                    int IndexOfStart = ComparisionStringN.indexOf("FirstName:");
+                    int IndexOfStart = ComparisionStringN.indexOf("First Name:");
                     StudentNamefromFile = ComparisionStringN.substring(IndexOfStart, ComparisionStringN.length()).trim();
                     //takes the end of the First name value and the total length of the string to get the Name and also gets rid of white space
                     break; //come out off the loop after finding the ID from the file
@@ -62,7 +69,9 @@ public class studentToCourse
 
             }
 
-
+            FileScan.close(); //closed to restart 
+            FileScan = new Scanner(new File(ID_Choice + ".txt")); //open to start from beging and to go throught 
+    
         //prints out student's name process
         System.out.println("Student Name: " + StudentNamefromFile); //prints out student's name
             
@@ -82,14 +91,15 @@ public class studentToCourse
                 }
 
             }
-
+            
             System.out.println("Student ID: " + UniqueIDfromFile); //prints out student's ID found from file 
             
             System.out.println("is this the intended Student? (press any key or type \"no\"): "); 
             String UserConfermation = reader.next(); //reads and stores user answer 
-                if (UserConfermation == "no") //if it's wrong then try again
+                if (UserConfermation.equals("no")) //if it's wrong then try again
                 {
                     AddStudentToCourse(); //try again 
+                    return; //exit propertly and avoid furhter calling
                 } 
 
 
@@ -109,6 +119,7 @@ public class studentToCourse
             if (UserConfermation == "no") //if it's wrong then try again
             {
                 AddStudentToCourse(); //try again 
+                return; //exit properly and avoid call
             } 
 
          */
@@ -149,8 +160,11 @@ public class studentToCourse
             default: 
                 System.out.println("ERROR - NOT VALID INPUT");
                 AddStudentToCourse(); //gose back 
+                return; //exits properly 
 
         }
+        FileScan.close(); //closed to restart 
+        FileScan = new Scanner(new File(ID_Choice + ".txt")); //open to start from beging and to go throught 
 
         
         //checks if student is in course   
@@ -162,6 +176,7 @@ public class studentToCourse
             {
                     System.out.println("ERROR - STUDENT ALREADY IN COURSE");
                     AddStudentToCourse(); //gose back to start of the class
+                    return; //exit properly 
 
             }
                
@@ -219,24 +234,28 @@ public class studentToCourse
         //reads file if you want
         System.out.println("Would you like to see the updated File?(type 'yes' or enter anything else for no)"); 
         String UserResponseUF = reader.nextLine(); //finds users response
-        if (UserResponseUF == "yes")
+
+        FileScan.close(); //closed to restart 
+        FileScan = new Scanner(new File(ID_Choice + ".txt")); //open to start from beging and to go throught 
+
+        if (UserResponseUF.equals("yes"))
         {
             while(FileScan.hasNext())
             {
                 System.out.println(FileScan.nextLine()); //reads the entire student file
             }
             //PrintStudents()
-    
-            writer.close(); //close the writer out. 
-            FileScan.close(); //closes filescan too 
-
         } 
+        writer.close(); //close the writer out. 
+        FileScan.close(); //closes filescan too 
+
         //for the loop 
         System.out.println("Would you like to add another student to another course? (type 'yes' or enter anything else for no)"); 
         String UserResponseLpr = reader.nextLine(); //finds users response
-        if (UserResponseLpr == "yes")
+        if (UserResponseLpr.equals("yes"))
         {
             AddStudentToCourse(); //gose back to the class and calls it 
+            return; //exit properly 
         }
 
     }
@@ -296,7 +315,7 @@ public class studentToCourse
                 //selects the category and reads it in as numbers 
                 
                 
-                    for(int m = 0; x < 5; m++) //loop for quizzes
+                    for(int m = 0; m < 5; m++) //loop for quizzes
                     {
                         String ComaprisonQuiz = (Courses[x] + " Quiz "+ m + "Score: " );  
                         //finds the string containg quiz score to total it up
@@ -345,7 +364,7 @@ public class studentToCourse
 
     
         }
-        // at the end of the for loop then we take all the scores and calculate it 
+        // at the end of the while loop then we take all the scores and calculate it 
             double QuizPercentScore = (double)RunningQuizScore/(double)RunningQuizDenom; //calculates quiz percentage
             double MidtermPercentScore = (double)MidtermScore/50.0; //finds midterm score 
             double FinalPercentScore = (double)FinalScore / 100.0; //finds final score 
@@ -353,49 +372,49 @@ public class studentToCourse
             double CoursePercentageScore = (QuizPercentScore * QuizWeights) + (((MidtermPercentScore + FinalPercentScore)/2 ) *SummitiveWeight) + (HomeworkWeight * 1); 
             //this assumes that we obtain the sumative score by midterm and final percent score by avrageing the midterm and final and multiplying it by the summitive weight 
             //we are also assuming that homework has been completed and is weighted at 1 - so basically a free 10% to students in that class 
-            if((CoursePercentageScore > 0.93 )&&(CoursePercentageScore <1))
+            if((CoursePercentageScore > 0.93 )&&(CoursePercentageScore <=1))
             {
                 LetterGrade = "A"; 
-            } else if((CoursePercentageScore > 0.9 )&&(CoursePercentageScore < 0.93))
+            } else if((CoursePercentageScore > 0.9 )&&(CoursePercentageScore <= 0.93))
             {
                 LetterGrade = "A-"; 
 
-            } else if((CoursePercentageScore > 0.87 )&&(CoursePercentageScore <0.9))
+            } else if((CoursePercentageScore > 0.87 )&&(CoursePercentageScore <=0.9))
             {
                 LetterGrade = "B+"; 
                 
-            } else if((CoursePercentageScore > 0.83 )&&(CoursePercentageScore < 0.87))
+            } else if((CoursePercentageScore > 0.83 )&&(CoursePercentageScore <= 0.87))
             {
                 LetterGrade = "B"; 
                 
-            } else if((CoursePercentageScore > 0.8 )&&(CoursePercentageScore <0.83))
+            } else if((CoursePercentageScore > 0.8 )&&(CoursePercentageScore <=0.83))
             {
                 LetterGrade = "B-"; 
                 
-            } else if((CoursePercentageScore > 0.75 )&&(CoursePercentageScore <0.8))
+            } else if((CoursePercentageScore > 0.75 )&&(CoursePercentageScore <=0.8))
             {
                 LetterGrade = "C+"; 
                 
-            } else if((CoursePercentageScore > 0.70 )&&(CoursePercentageScore < 0.75))
+            } else if((CoursePercentageScore > 0.70 )&&(CoursePercentageScore <= 0.75))
             {
                 LetterGrade = "C"; 
                 
-            } else if((CoursePercentageScore > 0.65 )&&(CoursePercentageScore < 0.70))
+            } else if((CoursePercentageScore > 0.65 )&&(CoursePercentageScore <= 0.70))
             {
                 LetterGrade = "C-"; 
                 
-            } else if((CoursePercentageScore > 0.60 )&&(CoursePercentageScore < 0.65))
+            } else if((CoursePercentageScore > 0.60 )&&(CoursePercentageScore <= 0.65))
             {
                 LetterGrade = "D+"; 
-            } else if((CoursePercentageScore > 0.55 )&&(CoursePercentageScore < 0.60))
+            } else if((CoursePercentageScore > 0.55 )&&(CoursePercentageScore <= 0.60))
             {
                 LetterGrade = "D"; 
                 
-            } else if((CoursePercentageScore > 0.50 )&&(CoursePercentageScore < 0.55))
+            } else if((CoursePercentageScore > 0.50 )&&(CoursePercentageScore <= 0.55))
             {
                 LetterGrade = "D-"; 
                 
-            } else if((CoursePercentageScore > 0 )&&(CoursePercentageScore < 0.50))
+            } else if((CoursePercentageScore > 0 )&&(CoursePercentageScore <= 0.50))
             {
                 LetterGrade = "F"; 
             }
