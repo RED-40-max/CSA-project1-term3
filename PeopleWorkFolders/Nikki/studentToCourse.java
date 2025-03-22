@@ -261,6 +261,8 @@ public class studentToCourse
     }
 
     //making it calculate grades 
+    //since this method is within a student class and therfore connected to a instance of that class, you have to 
+    //make the getting the file a little better, also edit the way that you are going to get the class and whatnot 
 
     public static void CalculateGrade(int ID_Choice) throws IOException
     {
@@ -372,60 +374,88 @@ public class studentToCourse
             double CoursePercentageScore = (QuizPercentScore * QuizWeights) + (((MidtermPercentScore + FinalPercentScore)/2 ) *SummitiveWeight) + (HomeworkWeight * 1); 
             //this assumes that we obtain the sumative score by midterm and final percent score by avrageing the midterm and final and multiplying it by the summitive weight 
             //we are also assuming that homework has been completed and is weighted at 1 - so basically a free 10% to students in that class 
-            if((CoursePercentageScore > 0.93 )&&(CoursePercentageScore <=1))
+            if((CoursePercentageScore > 0.93 )&&(CoursePercentageScore <=1)) //if it's between these metrics 
             {
-                LetterGrade = "A"; 
-            } else if((CoursePercentageScore > 0.9 )&&(CoursePercentageScore <= 0.93))
+                LetterGrade = "A"; //Assign this letter grade
+            } else if((CoursePercentageScore > 0.9 )&&(CoursePercentageScore <= 0.93))//if it's between these metrics 
             {
                 LetterGrade = "A-"; 
 
-            } else if((CoursePercentageScore > 0.87 )&&(CoursePercentageScore <=0.9))
+            } else if((CoursePercentageScore > 0.87 )&&(CoursePercentageScore <=0.9))//if it's between these metrics 
             {
                 LetterGrade = "B+"; 
                 
-            } else if((CoursePercentageScore > 0.83 )&&(CoursePercentageScore <= 0.87))
+            } else if((CoursePercentageScore > 0.83 )&&(CoursePercentageScore <= 0.87))//if it's between these metrics 
             {
                 LetterGrade = "B"; 
                 
-            } else if((CoursePercentageScore > 0.8 )&&(CoursePercentageScore <=0.83))
+            } else if((CoursePercentageScore > 0.8 )&&(CoursePercentageScore <=0.83))//if it's between these metrics 
             {
                 LetterGrade = "B-"; 
                 
-            } else if((CoursePercentageScore > 0.75 )&&(CoursePercentageScore <=0.8))
+            } else if((CoursePercentageScore > 0.75 )&&(CoursePercentageScore <=0.8))//if it's between these metrics 
             {
                 LetterGrade = "C+"; 
                 
-            } else if((CoursePercentageScore > 0.70 )&&(CoursePercentageScore <= 0.75))
+            } else if((CoursePercentageScore > 0.70 )&&(CoursePercentageScore <= 0.75))//if it's between these metrics 
             {
                 LetterGrade = "C"; 
                 
-            } else if((CoursePercentageScore > 0.65 )&&(CoursePercentageScore <= 0.70))
+            } else if((CoursePercentageScore > 0.65 )&&(CoursePercentageScore <= 0.70))//if it's between these metrics 
             {
                 LetterGrade = "C-"; 
                 
-            } else if((CoursePercentageScore > 0.60 )&&(CoursePercentageScore <= 0.65))
+            } else if((CoursePercentageScore > 0.60 )&&(CoursePercentageScore <= 0.65))//if it's between these metrics 
             {
                 LetterGrade = "D+"; 
-            } else if((CoursePercentageScore > 0.55 )&&(CoursePercentageScore <= 0.60))
+            } else if((CoursePercentageScore > 0.55 )&&(CoursePercentageScore <= 0.60))//if it's between these metrics 
             {
                 LetterGrade = "D"; 
                 
-            } else if((CoursePercentageScore > 0.50 )&&(CoursePercentageScore <= 0.55))
+            } else if((CoursePercentageScore > 0.50 )&&(CoursePercentageScore <= 0.55))//if it's between these metrics 
             {
                 LetterGrade = "D-"; 
                 
-            } else if((CoursePercentageScore > 0 )&&(CoursePercentageScore <= 0.50))
+            } else if((CoursePercentageScore > 0 )&&(CoursePercentageScore <= 0.50))//for anything bellow 0.5
             {
                 LetterGrade = "F"; 
             }
 
         //write the scores in by replaceing with specified course
-        PrintWriter writer = new PrintWriter(new FileWriter(ID_Choice +".txt", true));
     //the writing back to the file agent / loop         
     //QuizPercentScore
     //MidtermPercentScore
     //FinalPercentScore
     //overall grade LetterGrade
+        FileScan.close(); //closed to restart 
+        FileScan = new Scanner(new File(ID_Choice + ".txt")); //open to start from beging and to go throught 
+        PrintWriter writer = new PrintWriter(new FileWriter(ID_Choice +".txt", true));
+        while(FileScan.hasNext()) //make a loop that replaces stuff, iterates thorught entiere file 
+        {
+            String CompHoldString = FileScan.nextLine(); //stores it in there
+
+            if(CompHoldString.indexOf(Courses[x] + " Quiz Percentage Score: ") != -1) // if the line is quiz percentage
+            {
+                writer.println(Courses[x] + " Quiz Percentage Score: " + QuizPercentScore); //replaces quiz percenatge score 
+
+            } else if (CompHoldString.indexOf(Courses[x] + " Midterm Percentage Score: ") != -1) //if the line is midterm score
+            {
+                writer.println(Courses[x] + " Midterm Percentage Score: " + MidtermPercentScore); //replaces the midterem score
+
+            } else if (CompHoldString.indexOf(Courses[x] + " Final Percentage Score: ") != -1) //if the lines is final score
+            {
+                writer.println(Courses[x] + "Final Percentage Score: " + FinalPercentScore); //replaces the final score
+
+            } else if (CompHoldString.indexOf(Courses[x] + " Overall Grade: ") != -1) //if the lines is overall grade score 
+            {
+                writer.println(Courses[x] + " Overall Grade: " + CoursePercentageScore); //replaces overall grade
+            } else //if it's none of thoese
+            {
+                writer.println(CompHoldString); //don't replace just put donw same thing 
+            }
+
+        }
+
 
 
 
