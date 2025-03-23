@@ -1,4 +1,7 @@
+package PeopleWorkFolders.Benisha;
 import java.util.Scanner;
+
+import Student;
 
 public class Main {
     
