@@ -1,10 +1,10 @@
 /* 
 TO-DO 
-- unify Student Registration
-    + merge / edit inputStudents() and registerStudent()
-        + so that it creates a file, writes student info, updates student Roster and Student Roster id arrays 
-        + make sure it reads / writes with proper error handling and checks for file exsitence 
-        + make sure it writes in the details into the file
+DONE - unify Student Registration
+    DONE + merge / edit inputStudents() and registerStudent()
+    DONE + so that it creates a file, writes student info, updates student Roster and Student Roster id arrays 
+    CURRENTLY WORKING ON:  + make sure it reads / writes with proper error handling and checks for file exsitence 
+    DONE    + make sure it writes in the details into the file
 
 - Edit StudentStats(int FileDisplayType) 
     + finish code that displays the students stats (based on 1 or 2)
@@ -89,31 +89,13 @@ public class ColabMain {
     }
  
 
-    //fucntion to add student
-    public static void inputStudents() {
-        
-        System.out.println("Enter information for " + maxNumStudent + " students:");
-
-        while (currentStudents < maxNumStudent) {//make user enter teh amount of studnt names is in maxnumostutends
-            System.out.println("\nEnter name for student #" + (currentStudents + 1));//show current student and add one since it starts at 0
-            String name = reader.nextLine();
-            File file = new File(uniqueID + ".txt"); //creates a file for this student based on unique ID
-            
-
-            uniqueID = uniqueID + 1; // increment the id
-            studentRosterID[currentStudents] = uniqueID; // assign teh ID to student
-            studentRoster[currentStudents] = name;//store teh naem in the roster
-            currentStudents=currentStudents+1;//adds one to the current student
-
-            System.out.println("Added: " + name + " ID: " + uniqueID + " \n");
-        }
-    }
+  
 // methid that shows studnt id and naem
     public static void showAllAttendance() {
         System.out.println("\nShowing attendance for all students:");
         for (int x = 0; x < currentStudents; x++) {//loop to show all the students
             System.out.println("\nStudent ID: " + studentRosterID[x]);//show the student ID
-            System.out.println("Student Name: " + studentRoster[x]);//show the student name
+            System.out.println("Student Name: " + studentRoster[x]);//show the student's first name
         }
     }
 
@@ -362,24 +344,71 @@ public class ColabMain {
         }
 
     }
+      //fucntion to add student
+     
     public static void registerStudent() throws IOException{
-        int UniqueID=1;
-        int StudentUniqueID=0;
+        
             
         System.out.println("Input student's first name: ");
-        String firstName=reader.nextLine();
+        String firstName = reader.nextLine();
+
         System.out.println("Input student's last name: ");
-        String lastName=reader.nextLine();
+        String lastName = reader.nextLine();
+
         System.out.println("Input student's graduation year (Ex. 2026): ");
-        String gradYear=reader.nextLine();
-        System.out.println("Input student's current class (Ex. ): ");
-        String studentClass=reader.nextLine();
-        System.out.println("Input their grade in that class (Ex. A, B, etc.): ");
-        String classGrade=reader.nextLine();
-        //make a file for the student 
+        String gradYear = reader.nextLine();
+
+        String FullName = firstName + " " + lastName; //make a full name string
         
-        StudentUniqueID+=UniqueID;
-        UniqueID+=1;
+        //handling if you already add two same names 
+        
+        //checking for repeated names and making sure that they want to add that name 
+        for (int x = 0; x < currentStudents; x++)
+        {
+            if(studentRoster[x].equals(FullName)) //if they find something in the roster with the same name 
+            {   
+                System.out.println("A student with the name " + FullName + " already exists in the roster.");
+                System.out.println("Do you want to proceed with registration? (yes/no)"); //ask if they still want to add
+                String choice = reader.nextLine(); //gets reader input
+                if(choice.equals("yes")) //if yes
+                {
+                    break; //breaks out 
+                } else if(choice.equals("no")) //if no call menu 
+                {
+                    System.out.println("Registration cancelled."); ///says that it cancled it and moved on to next student 
+                    //PUT CALL MENU METHOD HERE 
+                    break; //and break out 
+                }
+
+            }
+
+        }
+
+        //System.out.println("Input student's current class (Ex. ): ");
+        //String studentClass = reader.nextLine();
+
+        //System.out.println("Input their grade in that class (Ex. A, B, etc.): ");
+        //String classGrade = reader.nextLine();
+        
+        int StudentUniqueID = uniqueID++; //Assinging then incriment ID by one
+        File file = new File(StudentUniqueID + ".txt"); //creates a file for this student based on unique ID
+        PrintWriter writer = new PrintWriter(new FileWriter(StudentUniqueID +".txt", true)); //sets up a writer to write inside the file using appending method 
+       
+        //writes all collected data in 
+        writer.println("Student Full name: " + FullName); 
+        writer.println("Student Graduation Year: " + gradYear);
+        writer.println(" "); //space for formatting 
+        writer.close(); //closes so other methods are chill 
+
+        //updating data within main to reflect state
+        currentStudents++;//adds one to the current student
+        studentRosterID[currentStudents] = StudentUniqueID; // assign teh ID to student
+        studentRoster[currentStudents] = FullName;//store teh naem in the roster
+       
+
+        //outputs messege
+        System.out.println("Added: " + FullName + " ID: " + StudentUniqueID + " \n");
+         
         AddStudentToCourse();
         
     }
