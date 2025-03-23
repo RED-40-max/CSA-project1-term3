@@ -23,7 +23,7 @@ public class studentToCourse
         //PrintStudents()
         System.out.println("Pick Student's ID: "); 
         int ID_Choice = reader.nextInt(); //reads in the ID chosen 
-
+        
     //checking and handeling ID
         boolean IsValidID = false; 
         //iterates thorught the array to check if user provided ID matches a valid ID within the Roster
@@ -86,6 +86,7 @@ public class studentToCourse
                 if (ComparisionStringID.indexOf("Unique ID:") != -1) //checks if the line contains 'unique id' - meaning it can have the unique ID of the thing
                 {
                     UniqueIDfromFile = FileScan.nextInt(); //finds and stores the next integer from the file - assuming it is the unique id
+                    FileScan.nextLine();
                     break; //come out off the loop after finding the ID from the file
                    
                 }
@@ -324,11 +325,13 @@ public class studentToCourse
                         if (CompLine.indexOf(ComaprisonQuiz)!= -1)
                         {
                             int HolderValueQuiz = FileScan.nextInt();
+                           
                             if( HolderValueQuiz != 999) //if next int contains anything but 
                             {   
                                 RunningQuizScore += HolderValueQuiz; //adds the points to the running score of it 
                                 RunningQuizDenom += 20; //adds 20 since each quiz is worth 20 points 
                             }
+                            FileScan.nextLine(); 
 
                         }
                     
@@ -358,7 +361,7 @@ public class studentToCourse
                         FinalScore = HolderValueFinal; //sets it up
 
                     }
-
+                    FileScan.nextLine(); 
                 }
             
                 
