@@ -1,15 +1,15 @@
 /* 
 TO-DO 
+- unify Student Registration
+    + merge / edit inputStudents() and registerStudent()
+        + so that it creates a file, writes student info, updates student Roster and Student Roster id arrays 
+        + make sure it reads / writes with proper error handling and checks for file exsitence 
+        + make sure it writes in the details into the file
+
 - Edit StudentStats(int FileDisplayType) 
     + finish code that displays the students stats (based on 1 or 2)
     + make sure it works thorught the program with it's parameters 
     + project integration thorught code. 
-    
-- Edit inputStudents() 
-    + see how it will play in with registerStudent() since they both should do same thing 
-
-- better integrate registerStudent()
-    + make sure it dose file I/O
 
 - updateAttendance() for I/O 
     + make it so that it updates the file, rather then the variable 
@@ -21,9 +21,32 @@ TO-DO
 - Grade() - for I/O 
     + make it so that it reads and updates to a perticular selected file 
     + integrate grade thorught the program 
+    + make sure override vs. normal is sepreate and clear 
+    + make sure file updates and calcuations are set and do it 
 
-- get rachel's code 
 
+- Menu() - for how to create and call new objects 
+    + find out how to create a new student object and manipulate it 
+    + figure out how to create / call a perticular student and a perticular method within that students thing 
+    + call case 3 and 4 better / edit it so no syntax errors 
+    + fix calls so they are called on the proper object and the correct studen'ts data is used 
+    + integrate better into program 
+
+- main(String[] args)
+    + sort out how that will work and the flow, given menu and whatnot
+    + review main so no redudencies with calling methods  
+    
+- use findStudentIndex(int Id)  
+    + find places where it could streamline efficency and make it better 
+    + revise the loop so it returns the correct index when a match is found, rather then overrighting each time 
+    + use if need be, otherwise leave it. 
+
+other stuff: 
+    + for string comparsions use .equals() instead of == 
+    + after using nextInt(), add nextLine() to clear and avoid skipping input 
+    + make sure variable names, methods, and classes are all consisitant 
+    + put a little more comments on some bare looking stuff 
+    + wayy more I/O then what it currently has 
 
  */
 
@@ -47,6 +70,7 @@ public class ColabMain {
     
     
     public static void main(String[] args) throws IOException{
+        Menu(); 
         
         //inputStudents();//call the input student functiom
         registerStudent(); //to make new students w/ file 
@@ -371,19 +395,106 @@ public class ColabMain {
         }
     }
 //EDIT
-    public static void StudentStats(int FileDisplayType) {
-        //Read student file
-        System.out.println("Full or short file (1 for full, 2 for short): ");
-        if (FileDisplayType == 1){
-      
-            System.out.println(); 
-        } //I need the array names 
-        else {
-            System.out.println(); 
-        } 
-    
+   
 
-    }
+    public static void Menu() throws IOException { // method
+        Scanner input = new Scanner(System.in);
+        boolean inPortal = true; 
+
+        while (inPortal) {
+           System.out.println("Hi! Welcome to the Kude High School registration portal.\n Enter: \n (1) Register new student" 
+           + "\n(2) Add student to course \n(3) See attendance \n(4) Update grades \n(5) Exit portal");
+           int option = input.nextInt();
+
+           switch (option) {
+              case 1: // register new student
+                 while (true) {
+                    PrintStudents();
+                    System.out.println("Which student? Enter an ID, or 9 to exit.");
+                    int ID = input.nextInt();
+                    if (ID != 9)
+                    { registerStudent();
+                    }
+                    else 
+                    {
+                        break;
+                    }
+                 }
+                 break;
+                 
+              case 2: // add student to course
+                 while (true) {
+                    PrintStudents();
+                    System.out.println("Which student? Enter an ID, or 9 to exit.");
+                    int ID = input.nextInt();
+                    if (ID != 9) 
+                    { AddStudentToCourse();
+                    }else 
+                    {break;}
+                 }
+                 break;
+                 
+              case 3: 
+              //file I/O - it should loop thorught all the student files and print out all total attendences 
+              //use: for loop, I/O, handling, ect. 
+                 System.out.println("Would you like to update the attendance? Enter 1 if yes, 2 if no.");
+                 int i = input.nextInt();
+                 if (i == 1) {
+               
+                    PrintStudents();
+                       System.out.println("Which student? Enter an ID, or 9 to exit.");
+                       int ID = input.nextInt();
+                       if (ID != 9) 
+                       {
+                            ColabStudents.updateAttendance();
+                       }
+                       else{ break;}
+    
+                 }
+                 break;
+                 
+              case 4: // update grades
+                 
+                    PrintStudents();
+                    System.out.println("Which student? Enter an ID, or 9 to exit.");
+                    int ID = input.nextInt();
+                    if (ID != 9) {
+    
+                        students.StudentStats(1); // idk if this is correct way to call it
+                        students.Grade(ID);
+                    }
+                    else {break;}
+                
+                 break;
+                 
+              case 5: // exit portal
+                 System.out.println("You have now exited the student registrtion portal.");
+                 inPortal = false;
+                 break;
+                 
+              default: // error checking
+                 System.out.println("That option doesn't exist! Please enter an available number.");
+                 option = input.nextInt();
+                 break;
+           }
+        }
+        
+     }
+
+     public static int findStudentIndex(int Id) //quick method that finds an ID index based on the ID that the user inputed / is given
+     {
+        for (int x = 0; x < currentStudents; x++ )
+        {
+            if (studentRosterID[x] == Id)
+            {
+                Id = x; 
+            } else 
+            {
+                Id = -1; 
+            }
+        }
+                return Id;
+     }
 
 }
 

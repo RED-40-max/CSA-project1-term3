@@ -102,8 +102,8 @@ public class ColabStudent {
         System.out.println(name + " " + attStats);
     }
 
-    public static void Grade(){
-        ColabMain.StudentStats(1);
+    public static void Grade(int Student_ID){
+        StudentStats(1);
         Scanner reader = new Scanner(System.in); //so it works for this as well
 
             System.out.println("Do you want to change a grade or input one in: ");
@@ -156,5 +156,18 @@ public class ColabStudent {
                 
             }
             
+        }
+        public static void StudentStats(int FileDisplayType) {
+            //Read student file
+            System.out.println("Full or short file (1 for full, 2 for short): ");
+            if (FileDisplayType == 1){
+          
+                System.out.println(); 
+            } //I need the array names 
+            else {
+                System.out.println(); 
+            } 
+        
+    
         }
 }
