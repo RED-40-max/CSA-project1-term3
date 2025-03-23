@@ -9,6 +9,7 @@ public class ColabStudent {
     private int present;
     private int tardy;
     private int absent;
+    public Scanner reader = new Scanner(System.in); 
 
     // initialize student inofmation
     public ColabStudent(String studentName, int studentID) {
@@ -66,6 +67,7 @@ public class ColabStudent {
             if (choice == 1) {
                 // Increment present counter
                 present++;
+
                 System.out.println("Marked as present");
             } else if (choice == 2) {
                 // Increment tardy counter
@@ -100,5 +102,59 @@ public class ColabStudent {
         System.out.println(name + " " + attStats);
     }
 
-    
+    public static void Grade(){
+        ColabMain.StudentStats(1);
+        Scanner reader = new Scanner(System.in); //so it works for this as well
+
+            System.out.println("Do you want to change a grade or input one in: ");
+            String gradeOption = reader.nextLine();
+
+            if (gradeOption=="Override"){
+                System.out.println("What assignment grade do you want to override: ");
+                //print options like 1=quiz or smth
+                int assignmentType = reader.nextInt();
+                System.out.println("What % do you want to change it to: ");
+                int changePercent = reader.nextInt();
+                //idk what the psuedocode wants me to do with the %
+
+            if (gradeOption=="Normal Grade"){
+                System.out.println("What assignment grade do you want to override: ");
+                assignmentType = reader.nextInt();
+
+                //also the 1=quiz etc
+                switch(assignmentType){
+                    case 1:
+                        //quiz
+                        System.out.println("What grade did they get: ");
+                        int quizScore = reader.nextInt();
+                        break;
+                    case 2:
+                        //hw
+                        System.out.println("What grade did they get: ");
+                        int hwScore = reader.nextInt();
+                        break;
+                    case 3:
+                        //midterm
+                        System.out.println("What grade did they get: ");
+                        int midtermScore = reader.nextInt();
+                        break;
+                    case 4:
+                        //final
+                        System.out.println("What grade did they get: ");
+                        int finalScore = reader.nextInt();
+                        break;
+                    default:
+                        System.out.println("That isn't a option, try again. ");
+                        //goes back to the grade class and loops again 
+                        //put the funtion/method in loop :3
+                    }
+                //update the files, CalculateGrade() and StudentStats()
+                //idk to do on githubbbbbb
+                            
+                
+                }
+                
+            }
+            
+        }
 }
