@@ -1,53 +1,4 @@
 /* 
-TO-DO 
-DONE - unify Student Registration
-    DONE + merge / edit inputStudents() and registerStudent()
-    DONE + so that it creates a file, writes student info, updates student Roster and Student Roster id arrays 
-    DONE  + make sure it reads / writes with proper error handling and checks for file exsitence 
-    DONE    + make sure it writes in the details into the file
-
-COME BACK TO IT - Edit StudentStats(int FileDisplayType) 
-   DONE + finish code that displays the students stats (based on 1 or 2)
-    MAYBE + make sure it works thorught the program with it's parameters 
-    MAYBE + project integration thorught code. 
-
-- updateAttendance() for I/O 
-    + make it so that it updates the file, rather then the variable 
-
-- showAttendance() for I/O 
-    + make it so that it reads from a perticular file 
-    + make it so that it reads only some things / total attendence from perticular file 
-
-- Grade() - for I/O 
-    + make it so that it reads and updates to a perticular selected file 
-    + integrate grade thorught the program 
-    + make sure override vs. normal is sepreate and clear 
-    + make sure file updates and calcuations are set and do it 
-
-
-- Menu() - for how to create and call new objects 
-    + find out how to create a new student object and manipulate it 
-    + figure out how to create / call a perticular student and a perticular method within that students thing 
-    + call case 3 and 4 better / edit it so no syntax errors 
-    + fix calls so they are called on the proper object and the correct studen'ts data is used 
-    + integrate better into program 
-
-- main(String[] args)
-    + sort out how that will work and the flow, given menu and whatnot
-    + review main so no redudencies with calling methods  
-    
-- use findStudentIndex(int Id)  
-    + find places where it could streamline efficency and make it better 
-    + revise the loop so it returns the correct index when a match is found, rather then overrighting each time 
-    + use if need be, otherwise leave it. 
-
-other stuff: 
-    + for string comparsions use .equals() instead of == 
-    + after using nextInt(), add nextLine() to clear and avoid skipping input 
-    + make sure variable names, methods, and classes are all consisitant 
-    + put a little more comments on some bare looking stuff 
-    + wayy more I/O then what it currently has 
-
  */
 
 
@@ -86,14 +37,13 @@ public class ColabMain {
             //calling the methofds
             students.updateAttendance();
             students.showAttendance();
-            AddStudentToCourse();
         }
         
     }
  
 
   
-// methid that shows studnt id and naem
+// method that shows studnt id and name
     public static void showAllAttendance() {
         System.out.println("\nShowing attendance for all students:");
         for (int x = 0; x < currentStudents; x++) {//loop to show all the students
@@ -132,57 +82,55 @@ public class ColabMain {
         //conferms that this is the student's file user wants to select
             //first find the student name thorught a loop, finding name: and making substrig to later print 
 
-            String ComparisionStringN; //makes a string to go and help compare
-            String StudentNamefromFile = "skibidi"; //makes it to store the student name w/ obv error
+           // String StudentNamefromFile = "skibidi"; //makes it to store the student name w/ obv error
 
-            while(FileScan.hasNext()) //reads entire file
-            {
-                ComparisionStringN = FileScan.next(); //reads one line at a atime 
-                if (ComparisionStringN.indexOf("Full name:") != -1) //checks if the line contains 'unique id' - meaning it can have the unique ID of the thing
-                {
-                    int IndexOfStart = ComparisionStringN.indexOf(":"); //finds where the colon is so we can find where the name begins  
-                    StudentNamefromFile = ComparisionStringN.substring(IndexOfStart + 1, ComparisionStringN.length()).trim(); 
-                    //finds the student file by taking 
-                    //takes the end of the First name value and the total length of the string to get the Name and also gets rid of white space
-                    break; //come out off the loop after finding the ID from the file
+            // while(FileScan.hasNext()) //reads entire file
+            // {
+            //     String ComparisionStringN = FileScan.next(); //reads one line at a atime 
+
+            //     if (ComparisionStringN.indexOf("Student Full name:") != -1) //checks if the line contains 'unique id' - meaning it can have the unique ID of the thing
+            //     {
+            //         int IndexOfStart = ComparisionStringN.indexOf(":"); //finds where the colon is so we can find where the name begins  
+            //         StudentNamefromFile = ComparisionStringN.substring(IndexOfStart + 1).trim(); 
+            //         //finds the student file by taking 
+            //         //takes the end of the First name value and the total length of the string to get the Name and also gets rid of white space
+            //         break; //come out off the loop after finding the ID from the file
                    
-                }
+            //     }
 
-            }
-
-            FileScan.close(); //closed to restart 
-            FileScan = new Scanner(new File(ID_Choice + ".txt")); //open to start from beging and to go throught 
+            // }
+            
+            int StudentIndex = findStudentIndex(ID_Choice);
     
         //prints out student's name process
-        System.out.println("Student Name: " + StudentNamefromFile); //prints out student's name
-            
-        //prints out student's ID process
-        //first find the student ID thorught a loop, finding name: and making substrig to later print
-            String ComparisionStringID; //makes a string to go and help compare
-            int UniqueIDfromFile = 99999999; //makes a string with an obvious error for testing and so it can store id from file
+        System.out.println("Student Name: " + studentRoster[StudentIndex]); //prints out student's name
+        System.out.print("Is this correct? (yes/no): "); //for the thingy 
+        String UserInput = reader.nextLine();  //stores user input
 
-            while(FileScan.hasNext()) //reads entire file
-            {
-                ComparisionStringID = FileScan.next(); //reads one line at a atime 
-                if (ComparisionStringID.indexOf("Unique ID:") != -1) //checks if the line contains 'unique id' - meaning it can have the unique ID of the thing
-                {
-                    UniqueIDfromFile = FileScan.nextInt(); //finds and stores the next integer from the file - assuming it is the unique id
-                    FileScan.nextLine();
-                    break; //come out off the loop after finding the ID from the file
+        if (!UserInput.equals("yes")) { //if it's anything but yes, cancel it
+            System.out.println("Course enrollment cancelled.");
+            return;
+        }
+        
+
+        // //prints out student's ID process
+        // //first find the student ID thorught a loop, finding name: and making substrig to later print
+        //     String ComparisionStringID; //makes a string to go and help compare
+        //     int UniqueIDfromFile = 99999999; //makes a string with an obvious error for testing and so it can store id from file
+
+        //     while(FileScan.hasNext()) //reads entire file
+        //     {
+        //         ComparisionStringID = FileScan.next(); //reads one line at a atime 
+        //         if (ComparisionStringID.indexOf("Unique ID:") != -1) //checks if the line contains 'unique id' - meaning it can have the unique ID of the thing
+        //         {
+        //             UniqueIDfromFile = FileScan.nextInt(); //finds and stores the next integer from the file - assuming it is the unique id
+        //             FileScan.nextLine();
+        //             break; //come out off the loop after finding the ID from the file
                    
-                }
+        //         }
 
-            }
-            
-            System.out.println("Student ID: " + UniqueIDfromFile); //prints out student's ID found from file 
-            
-            System.out.println("is this the intended Student? (press any key or type \"no\"): "); 
-            String UserConfermation = reader.next(); //reads and stores user answer 
-                if (UserConfermation.equals("no")) //if it's wrong then try again
-                {
-                    AddStudentToCourse(); //try again 
-                    return; //exit propertly and avoid furhter calling
-                } 
+        //     }
+    
 
 
         /* //if array is more reliable use this instead 
@@ -222,7 +170,8 @@ public class ColabMain {
         reader.nextLine();
         String CourseName = "ratsoup"; //intilized with skibidi name for error checking
         String APStatus = "maybe"; //initlized with radical error checking wrong value
-        switch(UsrCourse_Choice) //based on integer input, dose course selection accordingly / adds course and appropriate status 
+        
+        switch (UsrCourse_Choice) //based on integer input, dose course selection accordingly / adds course and appropriate status 
         {
             case 1: 
                 CourseName = "World History";
@@ -252,12 +201,12 @@ public class ColabMain {
         
         //checks if student is in course   
         boolean IsStudentNotInCourse = true; //asssumes that student is not in course 
-        while(FileScan.hasNext()) //reads entire file
+        while(FileScan.hasNextLine()) //reads entire file
         {
-            ComparisionStringN = FileScan.next(); //reads one line at a atime 
-            if (ComparisionStringN.indexOf(CourseName) != -1) //checks if the line contains THE Course name that you want to add 
+           String  ComparisionStringN = FileScan.nextLine(); //reads one line at a atime 
+            if(ComparisionStringN.indexOf(CourseName) != -1) //checks if the line contains THE Course name that you want to add 
             {
-                    System.out.println("ERROR - STUDENT ALREADY IN COURSE");
+                    System.out.println("ERROR - STUDENT ALREADY IN " + CourseName);
                     AddStudentToCourse(); //gose back to start of the class
                     return; //exit properly 
 
@@ -284,31 +233,31 @@ public class ColabMain {
             PrinterWriter writer = new PrintWriter(new FileWriter(path, true)); 
         */
 
-        PrintWriter writer = new PrintWriter(new FileWriter(UniqueIDfromFile +".txt", true)); 
+        PrintWriter writer = new PrintWriter(new FileWriter(ID_Choice +".txt", true)); 
         //makes a writer that can append to the end charecters and then turns it over to the printer writer so it can write strings
         writer.println(" "); //blank for formatting
         writer.println("Course Name:" + CourseName); //set up course name
         writer.println(CourseName + " Type: " + APStatus ); //setting AP status
         int defaltValue = 999; //this is to initalize an impossiable number so it can be checked and marked as blank - makes it easier on grade() function
         //setting up with course name for easy refrence 
-        writer.println(CourseName + " Overall Grade: " + " " + defaltValue);
-        writer.println(CourseName + " Quiz Percentage Score: " + " " + defaltValue );
+       // writer.println(CourseName + " Overall Grade: " + " " + defaltValue);
+        //writer.println(CourseName + " Quiz Percentage Score: " + " " + defaltValue );
         
         //loop for quiz writing
-        for(int x = 0; x<5; x++)
+        for(int x = 0; x<3; x++)
         {
             writer.println(CourseName + " Quiz "+ x +"Score: " + " " + defaltValue);
         }
         //other stuff
-        writer.println(CourseName + " Midterm Percentage Score: " + " " + defaltValue);
+        //writer.println(CourseName + " Midterm Percentage Score: " + " " + defaltValue);
         writer.println(CourseName + " Midterm Score: " + " ");
 
-        writer.println(CourseName + " Final Percentage Score: " + " " + defaltValue);
+       // writer.println(CourseName + " Final Percentage Score: " + " " + defaltValue);
         writer.println(CourseName + " Final Score: " + " ");
         writer.println(" "); //blank for formatting
         
         //showing that it worked
-        System.out.println("you have now added" + StudentNamefromFile + "to" + CourseName); 
+        System.out.println("you have now added " +  studentRoster[StudentIndex] + " to " + CourseName); 
         //reads file if you want
         System.out.println("Would you like to see the updated File?(type 'yes' or enter anything else for no)"); 
         String UserResponseUF = reader.nextLine(); //finds users response
@@ -328,7 +277,7 @@ public class ColabMain {
         FileScan.close(); //closes filescan too 
 
         //for the loop 
-        System.out.println("Would you like to add another student to another course? (type 'yes' or enter anything else for no)"); 
+        System.out.println("Would you like to add another student to another course? (Type 'yes' or enter anything else for no)"); 
         String UserResponseLpr = reader.nextLine(); //finds users response
         if (UserResponseLpr.equals("yes"))
         {
@@ -340,14 +289,15 @@ public class ColabMain {
       //fucntion to add student
      
     public static void registerStudent() throws IOException{
-            
+        Scanner reader = new Scanner(System.in);
+
         System.out.println("Input student's first name: ");
         String firstName = reader.nextLine();
 
         System.out.println("Input student's last name: ");
         String lastName = reader.nextLine();
 
-        System.out.println("Input student's graduation year (Ex. 2026): ");
+        System.out.println("Input student's graduation year (ex. 2026): ");
         String gradYear = reader.nextLine();
 
         String FullName = firstName + " " + lastName; //make a full name string
@@ -359,12 +309,12 @@ public class ColabMain {
             if(studentRoster[x].equals(FullName)) //if they find something in the roster with the same name 
             {   
                 System.out.println("A student with the name " + FullName + " already exists in the roster.");
-                System.out.println("Do you want to proceed with registration? (yes/no)"); //ask if they still want to add
-                String choice = reader.nextLine(); //gets reader input
-                if(choice.equals("yes")) //if yes
+                System.out.println("Do you want to proceed with registration? (1 for yes/2 for no)"); //ask if they still want to add
+                int choice = reader.nextInt(); //gets reader input
+                if (choice == 1) //if yes
                 {
                     break; //breaks out 
-                } else if(choice.equals("no")) //if no call menu 
+                } else if (choice == 2) //if no call menu 
                 {
                     System.out.println("Registration cancelled."); ///says that it cancled it and moved on to next student 
                     Menu(); //calls menu so they can escape and choose something else 
@@ -385,13 +335,13 @@ public class ColabMain {
         PrintWriter writer = new PrintWriter(new FileWriter(file, true)); //sets up a writer to write inside the file using appending method and calls on same file we just created
        
         //writes all collected data in 
-        writer.println("Student Full name: " + FullName); 
-        writer.println("Student Graduation Year: " + gradYear);
+        writer.println("Student full name: " + FullName); 
+        writer.println("Student graduation Year: " + gradYear);
         writer.println(" "); //space for formatting 
         //put total attendence in
-        writer.println("Overall Present:");
-        writer.println("Overall Tardy:");
-        writer.println("Overall Absent:");
+        writer.println("Overall present:");
+        writer.println("Overall tardy:");
+        writer.println("Overall absent:");
 
         writer.close(); //closes so other methods are chill 
 
@@ -406,18 +356,6 @@ public class ColabMain {
         System.out.println("Added: " + FullName + " ID: " + StudentUniqueID + " \n");
          
         writer.close(); //makes sure it don't leak 
-        System.out.println("would you like to add courses now? ('yes' or 'no')"); 
-        String response = reader.next(); 
-        reader.nextLine(); //makes it chill 
-        if(response.equals("yes"))
-        {
-            AddStudentToCourse(); //makes it so 
-            return; 
-        } else 
-        {
-            Menu(); //heads back to menu 
-        }
-
 
         
     }
@@ -438,10 +376,10 @@ public class ColabMain {
     public static void Menu() throws IOException { // method
         Scanner input = new Scanner(System.in);
         boolean inPortal = true; 
-
+        System.out.println("Hi! Welcome to the Kude High School registration portal.");
+        
         while (inPortal) {
-           System.out.println("Hi! Welcome to the Kude High School registration portal.\n Enter: \n (1) Register new student" 
-           + "\n(2) Add student to course \n(3) See attendance \n(4) Update grades \n(5) Exit portal");
+           System.out.println("\nEnter: \n(1) Register new student \n(2) Add student to course \n(3) See attendance \n(4) Update grades \n(5) Exit portal");
            int option = input.nextInt();
            input.nextLine();
 
@@ -449,7 +387,7 @@ public class ColabMain {
               case 1: // register new student
                  while (true) {
                     PrintStudents();
-                    System.out.println("enter anything to proceed or 9 to exit.");
+                    System.out.println("Enter anything to proceed or 9 to exit.");
                     int ID = input.nextInt();
                     input.nextLine();
 
@@ -461,7 +399,8 @@ public class ColabMain {
                         break; //othersise exit 
                     }
                  }
-                 break;
+                 break; 
+
                  
               case 2: // add student to course
                  while (true) {
@@ -473,12 +412,13 @@ public class ColabMain {
                     { AddStudentToCourse();
                     }else 
                     {break;}
-                 }
-                 break;
+                 } break; 
+
                  
               case 3: 
               //file I/O - it should loop thorught all the student files and print out all total attendences 
               //use: for loop, I/O, handling, ect. 
+                 PrintStudents();
                  System.out.println("Would you like to update the attendance? Enter 1 if yes, 2 if no.");
                  int i = input.nextInt(); //stores the answer
                  input.nextLine(); //clears next line 
@@ -486,7 +426,7 @@ public class ColabMain {
                     PrintStudents(); //print out all students and ID 
                        System.out.println("Which student? Enter an ID, or 9 to exit."); //ask for whitch one
                        int ID = input.nextInt(); //user inputs id
-                       input.nextLine(); //next line is cleared
+                       //input.nextLine(); //next line is cleared
 
                        int index = findStudentIndex(ID); //id to object
                        if (ID != 9) 
@@ -496,8 +436,8 @@ public class ColabMain {
                        }
                        else{ break;}
     
-                 }
-                 break;
+                 } break; 
+       
                  
               case 4: // update grades
                  
@@ -515,11 +455,11 @@ public class ColabMain {
                         } else {
                             ColabStudent student = StudentInstance[index];                        
                             student.StudentStats(1); //calling the student stats for 
-                            student.Grade(ID); 
+                            student.Grade(); 
                         }
                     } else {break;}
-                
-                 break;
+                    break; 
+   
                  
               case 5: // exit portal
                  System.out.println("You have now exited the student registrtion portal.");
@@ -536,11 +476,12 @@ public class ColabMain {
         
      }
 
-     public static int findStudentIndex(int Id) //quick method that finds an ID index based on the ID that the user inputed / is given
+     public static int findStudentIndex(int Student_ID) //quick method that finds an ID index based on the ID that the user inputed / is given
      {
         for (int x = 0; x < currentStudents; x++ ) //move thorught all the students
         {
-            if (studentRosterID[x] == Id) //find the student name from the ID 
+       
+            if (studentRosterID[x] == Student_ID) //find the student name from the ID 
             {
                 return x;  //after you find it, return back
             } 

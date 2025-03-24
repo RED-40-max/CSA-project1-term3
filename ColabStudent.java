@@ -14,6 +14,12 @@ public class ColabStudent {
     private int present;
     private int tardy;
     private int absent;
+    private int quiz1Score = 0;
+    private int quiz2Score = 0;
+    private int quiz3Score = 0;
+    private int midtermScore = 0;
+    private int finalScore = 0;
+
     public Scanner reader = new Scanner(System.in); 
 
     // initialize student inofmation
@@ -39,7 +45,7 @@ public class ColabStudent {
 
     // function with parameter to show student info
     public void displayInfo() {
-
+        //This prints out studnet information
             System.out.println("\nSTUDENT INFORMATION");
             System.out.println("Name: " + name + "\n ID: " + uniqueID);
             System.out.println("Attendance\nPresent: " + present + "\nTardy: " + tardy + "\nAbsent: " + absent);
@@ -99,26 +105,28 @@ public class ColabStudent {
 
 
     // Use a Scanner to read the file line by line
+   // Read the file and build the updated content
+   
     Scanner fileScanner = new Scanner(file);
-    StringBuffer fileBuffer = new StringBuffer();
-
+    String updatedContent = "";
     while (fileScanner.hasNextLine()) {
         String line = fileScanner.nextLine();
-        // Use indexOf to check if the line contains one of the attendance labels.
-        if (line.indexOf("Overall Present:") != -1) {
+        if (line.contains("Overall Present:")) {
             line = "Overall Present: " + present;
-        } else if (line.indexOf("Overall Tardy:") != -1) {
+        } else if (line.contains("Overall Tardy:")) {
             line = "Overall Tardy: " + tardy;
-        } else if (line.indexOf("Overall Absent:") != -1) {
+        } else if (line.contains("Overall Absent:")) {
             line = "Overall Absent: " + absent;
         }
-        fileBuffer.append(line).append(System.lineSeparator());
+        updatedContent += line + "\n";
     }
     fileScanner.close();
 
-    // Write the updated contents back to the file (overwriting existing content)
+    // Write the updated content back to the file
     PrintWriter writer = new PrintWriter(new FileWriter(file));
+    writer.print(updatedContent);
     writer.close();
+ 
 
     System.out.println("Attendance updated in file " + this.uniqueID + ".txt");
 }
@@ -138,95 +146,85 @@ public class ColabStudent {
         System.out.println(name + " " + attStats);
     }
 
-    public void Grade(int Student_ID)throws IOException{
-        StudentStats(1); //prints out the stats of the student
-        Scanner reader = new Scanner(System.in); //so it works for this as well
-
-            System.out.println("Do you want to change a grade or input one in \n('Override' or 'Normal Grade'): ");
-            String gradeOption = reader.nextLine();
-
-            System.out.println("for which of the student's courses"); 
-            String CourseName = reader.nextLine(); 
-
-            if (gradeOption.equals("Override")){ //makes the override equence 
-                System.out.println("What grade do you want to override \n 1 - Quiz Percentage Score: \n 2 - Midterm Percentage Score \n 3 - Final Percentage Score:): "); //asks user
-                //print options like 1=quiz or smth
-                int assignmentType = reader.nextInt(); //takes in the input 
-                reader.nextLine(); //clears the new line
-
-                System.out.println("What % do you want to change it to: ");
-                int changePercent = reader.nextInt();
-                reader.nextLine();
-                
-                String FullAssingmentName; 
-
-                switch(assignmentType) //sets assingment type 
-                {
-                    case 1: //quiz percentage
-                        FullAssingmentName = CourseName + " Quiz Percentage Score";
-                        break;
-                    case 2: //midterm percetnage
-                        FullAssingmentName = CourseName + " Midterm Percentage Score";
-                        break;
-                    case 3: //final
-                        FullAssingmentName = CourseName + " Final Percentage Score"; 
-                        break;
-
-                    default: //otherwise do this
-                        System.out.println("ERROR - INPUT error try again"); 
-                        Grade(Student_ID); //calls it again 
-                        break;
-                }
-                //replace the current percentage score with the new one 
-
-            } else if (gradeOption.equals("Normal Grade")){
-                System.out.println("What assignment grade do you want to input (\n 1 - Quiz \n 2 - Final \n 3 - Midterm) ");
-                int assignmentType = reader.nextInt(); //reads it 
-                reader.nextLine();
-
-                //also the 1=quiz etc
-                switch(assignmentType){
-                    case 1:
-                        //quiz
-                        System.out.println("What grade did they get: ");
-                        int quizScore = reader.nextInt();
-                        reader.nextLine();
-                        break;
-                    case 2:
-                        //hw
-                        System.out.println("What grade did they get: ");
-                        int hwScore = reader.nextInt();
-                        reader.nextLine();
-                        break;
-                    case 3:
-                        //midterm
-                        System.out.println("What grade did they get: ");
-                        int midtermScore = reader.nextInt();
-                        reader.nextLine();
-                        break;
-                    case 4:
-                        //final
-                        System.out.println("What grade did they get: ");
-                        int finalScore = reader.nextInt();
-                        reader.nextLine();
-                        break;
-                    default:
-                        System.out.println("That isn't a option, try again. ");
-                        //goes back to the grade class and loops again 
-                        //put the funtion/method in loop :3
-                    }
-                //update the files, CalculateGrade() and StudentStats()
-                //idk to do on githubbbbbb
-                            
-                
-                } else 
-                {
-                    System.out.println("Invalid Option");
-                }
-                
-          
-            
+    public void Grade() throws IOException {
+        // Display current state (this may call your StudentStats method)
+        StudentStats(1);
+        
+        Scanner reader = new Scanner(System.in);
+        
+        System.out.println("Which assignment do you want to grade?");
+        System.out.println("1. Quiz 1");
+        System.out.println("2. Quiz 2");
+        System.out.println("3. Quiz 3");
+        System.out.println("4. Midterm");
+        System.out.println("5. Final");
+        
+        int choice = reader.nextInt();
+        reader.nextLine(); // clear the newline
+        
+        System.out.println("Enter the new score:");
+        int newScore = reader.nextInt();
+        reader.nextLine();
+        
+        switch (choice) {
+            case 1:
+                quiz1Score = newScore;
+                break;
+            case 2:
+                quiz2Score = newScore;
+                break;
+            case 3:
+                quiz3Score = newScore;
+                break;
+            case 4:
+                midtermScore = newScore;
+                break;
+            case 5:
+                finalScore = newScore;
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                return;
         }
+        
+        // Save the updated instance state to the file
+        saveStudentState();
+        
+        // Optionally, output the updated file content to verify
+        System.out.println("Updated student file:");
+        Scanner fileScanner = new Scanner(new File(this.uniqueID + ".txt"));
+        while (fileScanner.hasNextLine()) {
+            System.out.println(fileScanner.nextLine());
+        }
+        fileScanner.close();
+    }
+
+        public void saveStudentState() throws IOException { 
+            File file = new File(this.uniqueID + ".txt");
+            // Open the file in overwrite mode 
+            PrintWriter writer = new PrintWriter(new FileWriter(file, false));
+            
+            // Write student information
+            writer.println("Student full name: " + name);
+            // (Add any other details you want to store, such as graduation year if available)
+            
+            // Write attendance information
+            writer.println("Overall Present: " + present);
+            writer.println("Overall Tardy: " + tardy);
+            writer.println("Overall Absent: " + absent);
+            
+            // Write assignment grades from the object variables
+            writer.println("Quiz 1 Score: " + quiz1Score); //quiz 1
+            writer.println("Quiz 2 Score: " + quiz2Score);
+            writer.println("Quiz 3 Score: " + quiz3Score);
+
+            writer.println("Midterm Score: " + midtermScore);
+            writer.println("Final Score: " + finalScore);
+            
+            writer.close();
+            System.out.println("Student state saved to file " + this.uniqueID + ".txt");
+        }
+        
         public void StudentStats(int FileDisplayType) throws IOException{
             //assumes ID given has already been vetted and is correct, so no error handling 
 
@@ -238,6 +236,16 @@ public class ColabStudent {
                 while (FileScan.hasNextLine()) { //reads the entire file while scanning to see if there is more out there 
                     System.out.println(FileScan.nextLine()); //then printing what it reads 
                 }
+                System.out.println("Attendance:");
+                System.out.println("   Present: " + present);
+                System.out.println("   Tardy: " + tardy);
+                System.out.println("   Absent: " + absent);
+                System.out.println("Grades:");
+                System.out.println("   Quiz 1 Score: " + quiz1Score);
+                System.out.println("   Quiz 2 Score: " + quiz2Score);
+                System.out.println("   Quiz 3 Score: " + quiz3Score);
+                System.out.println("   Midterm Score: " + midtermScore);
+                System.out.println("   Final Score: " + finalScore);
 
                 System.out.println("--------------------------------------------------------"); //for formatting 
             } 
@@ -254,32 +262,21 @@ public class ColabStudent {
                         IsSummStatLine = true; 
                     } else if(line.indexOf("Student Graduation Year:") != -1) //if it contains the student's grad year
                     {
-                        IsSummStatLine = true; 
-                    } else if(line.indexOf("Course Name:") != -1 ) //contains course name
-                    {
-                        IsSummStatLine = true; 
-                    }else if(line.indexOf("Overall Grade:") != -1) //contains overall grade
-                    {
-                        IsSummStatLine = true; 
-                    }else if(line.indexOf("Present:") != -1) //contains overall present 
-                    {
-                        IsSummStatLine = true; 
-                    }else if(line.indexOf("Tardy:") != -1) //contains overall tardy 
-                    {
-                        IsSummStatLine = true; 
-                    }else if(line.indexOf("Absent:") != -1) //contains overall absents
-                    {
-                        IsSummStatLine = true; //makes it true so it can print 
-                    }
+                                IsSummStatLine = true; }
 
                     if ( IsSummStatLine == true) //if it is so 
                     {
                         System.out.println(line); //prints out summery stat
                     }
                 }
+                System.out.println("Attendance: Present " + present + ", Tardy " + tardy + ", Absent " + absent);
+        int quizAvg = (quiz1Score + quiz2Score + quiz3Score) / 3;
+        System.out.println("Quiz Average: " + quizAvg);
+        System.out.println("Midterm: " + midtermScore + ", Final: " + finalScore);
+        System.out.println("--------------------------------------------------------");
                 System.out.println("--------------------------------------------------------"); //for formatting 
             } 
         
             FileScan.close(); //for funsies and to make sure it dosn't bleed into next method 
         }   
-}
+    }

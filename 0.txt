@@ -1,0 +1,15 @@
+Student full name: joe  mama
+Overall Present: 1
+Overall Tardy: 0
+Overall Absent: 0
+Quiz 1 Score: 20
+Quiz 2 Score: 0
+Quiz 3 Score: 0
+Midterm Score: 0
+Final Score: 0
+Student full name: joe  mama
+Student graduation Year: 2002
+ 
+Overall present:
+Overall tardy:
+Overall absent:
